@@ -68,9 +68,7 @@ $(function () {
   dc.loadMenuCategories = function () {
     showLoading("#main-content");
     $ajaxUtils.sendGetRequest(allCategoriesUrl, buildAndShowHomeHTML);
-  };
-
-var chosenCategoryShortName = chooseRandomCategory(categories).short_name;  
+  }; 
   
   // Load the menu items view
   // 'categoryShort' is a short_name for a category
