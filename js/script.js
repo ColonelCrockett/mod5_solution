@@ -1,6 +1,6 @@
-$(function () { // Same as document.addEventListener("DOMContentLoaded"...
 
-  // Same as document.querySelector("#navbarToggle").addEventListener("blur",...
+$(function () {
+
   $("#navbarToggle").blur(function (event) {
     var screenWidth = window.innerWidth;
     if (screenWidth < 768) {
@@ -13,7 +13,6 @@ $(function () { // Same as document.addEventListener("DOMContentLoaded"...
 
 var dc = {};
 
-// Load the menu categories view
 dc.loadMenuCategories = function () {
   showLoading("#main-content");
   $ajaxUtils.sendGetRequest(
@@ -21,8 +20,6 @@ dc.loadMenuCategories = function () {
     buildAndShowCategoriesHTML);
 };
 
-// Load the menu items view
-// 'categoryShort' is a short_name for a category
 dc.loadMenuItems = function (categoryShort) {
   showLoading("#main-content");
   $ajaxUtils.sendGetRequest(
@@ -41,21 +38,17 @@ var menuItemsUrl =
 var menuItemsTitleHtml = "snippets/menu-items-title.html";
 var menuItemHtml = "snippets/menu-item.html";
 
-// Convenience function for inserting innerHTML for 'select'
 var insertHtml = function (selector, html) {
   var targetElem = document.querySelector(selector);
   targetElem.innerHTML = html;
 };
 
-// Show loading icon inside element identified by 'selector'.
 var showLoading = function (selector) {
   var html = "<div class='text-center'>";
   html += "<img src='images/ajax-loader.gif'></div>";
   insertHtml(selector, html);
 };
 
-// Return substitute of '{{propName}}'
-// with propValue in given 'string'
 var insertProperty = function (string, propName, propValue) {
   var propToReplace = "{{" + propName + "}}";
   string = string
@@ -63,14 +56,11 @@ var insertProperty = function (string, propName, propValue) {
   return string;
 };
 
-// Remove the class 'active' from home and switch to Menu button
 var switchMenuToActive = function () {
-  // Remove 'active' from home button
   var classes = document.querySelector("#navHomeButton").className;
   classes = classes.replace(new RegExp("active", "g"), "");
   document.querySelector("#navHomeButton").className = classes;
 
-  // Add 'active' to menu button if not already there
   classes = document.querySelector("#navMenuButton").className;
   if (classes.indexOf("active") === -1) {
     classes += " active";
@@ -78,53 +68,39 @@ var switchMenuToActive = function () {
   }
 };
 
-// On page load (before images or CSS)
 document.addEventListener("DOMContentLoaded", function (event) {
 
-// *** start ***
-// On first load, show home view
 showLoading("#main-content");
 $ajaxUtils.sendGetRequest(
   allCategoriesUrl,
   buildAndShowHomeHTML,
-  true); // Explicitly setting the flag to get JSON from server processed into an object literal
+  true);
 });
-// *** finish ***
 
-// Builds HTML for the home page based on categories array
-// returned from the server.
 function buildAndShowHomeHTML (categories) {
 
-  // Load home snippet page
 $ajaxUtils.sendGetRequest(
   homeHtmlUrl,
   function (homeHtml) {
 
-    // STEP 2: Call chooseRandomCategory, passing it retrieved 'categories'
     var chosenCategory = chooseRandomCategory(categories);
     var chosenCategoryShortName = chosenCategory.short_name;
 
-    // Proceed with the rest of the code
-    // ...
   },
-  false); // False here because we are getting just regular HTML from the server, so no need to process JSON.
+  false);
 }
-  
+
 var homeHtmlToInsertIntoMainPage = homeHtml.replace(/REPLACE_SHORT_NAME/g, "'" + chosenCategoryShortName + "'");
 
 insertHtml("#main-content", homeHtmlToInsertIntoMainPage);
 
-// Given array of category objects, returns a random category object.
+
 function chooseRandomCategory (categories) {
-  // Choose a random index into the array (from 0 inclusively until array length (exclusively))
   var randomArrayIndex = Math.floor(Math.random() * categories.length);
 
-  // return category object with that randomArrayIndex
   return categories[randomArrayIndex];
 }
 
-// Load the menu items view
-// 'categoryShort' is a short_name for a category
 dc.loadMenuItems = function (categoryShort) {
   showLoading("#main-content");
   $ajaxUtils.sendGetRequest(
@@ -133,18 +109,13 @@ dc.loadMenuItems = function (categoryShort) {
 };
 
 
-// Builds HTML for the categories page based on the data
-// from the server
 function buildAndShowCategoriesHTML (categories) {
-  // Load title snippet of categories page
   $ajaxUtils.sendGetRequest(
     categoriesTitleHtml,
     function (categoriesTitleHtml) {
-      // Retrieve single category snippet
       $ajaxUtils.sendGetRequest(
         categoryHtml,
         function (categoryHtml) {
-          // Switch CSS class active to menu button
           switchMenuToActive();
 
           var categoriesViewHtml =
@@ -159,8 +130,6 @@ function buildAndShowCategoriesHTML (categories) {
 }
 
 
-// Using categories data and snippets html
-// build categories view HTML to be inserted into page
 function buildCategoriesViewHtml(categories,
                                  categoriesTitleHtml,
                                  categoryHtml) {
@@ -168,9 +137,7 @@ function buildCategoriesViewHtml(categories,
   var finalHtml = categoriesTitleHtml;
   finalHtml += "<section class='row'>";
 
-  // Loop over categories
   for (var i = 0; i < categories.length; i++) {
-    // Insert category values
     var html = categoryHtml;
     var name = "" + categories[i].name;
     var short_name = categories[i].short_name;
@@ -189,18 +156,13 @@ function buildCategoriesViewHtml(categories,
 
 
 
-// Builds HTML for the single category page based on the data
-// from the server
 function buildAndShowMenuItemsHTML (categoryMenuItems) {
-  // Load title snippet of menu items page
   $ajaxUtils.sendGetRequest(
     menuItemsTitleHtml,
     function (menuItemsTitleHtml) {
-      // Retrieve single menu item snippet
       $ajaxUtils.sendGetRequest(
         menuItemHtml,
         function (menuItemHtml) {
-          // Switch CSS class active to menu button
           switchMenuToActive();
 
           var menuItemsViewHtml =
@@ -214,8 +176,7 @@ function buildAndShowMenuItemsHTML (categoryMenuItems) {
     false);
 }
 
-// Using category and menu items data and snippets html
-// build menu items view HTML to be inserted into page
+
 function buildMenuItemsViewHtml(categoryMenuItems,
                                 menuItemsTitleHtml,
                                 menuItemHtml) {
@@ -232,11 +193,9 @@ function buildMenuItemsViewHtml(categoryMenuItems,
   var finalHtml = menuItemsTitleHtml;
   finalHtml += "<section class='row'>";
 
-  // Loop over menu items
   var menuItems = categoryMenuItems.menu_items;
   var catShortName = categoryMenuItems.category.short_name;
   for (var i = 0; i < menuItems.length; i++) {
-    // Insert menu item values
     var html = menuItemHtml;
     html =
       insertProperty(html, "short_name", menuItems[i].short_name);
@@ -269,7 +228,6 @@ function buildMenuItemsViewHtml(categoryMenuItems,
                      "description",
                      menuItems[i].description);
 
-    // Add clearfix after every second menu item
     if (i % 2 !== 0) {
       html +=
         "<div class='clearfix visible-lg-block visible-md-block'></div>";
@@ -283,11 +241,10 @@ function buildMenuItemsViewHtml(categoryMenuItems,
 }
 
 
-// Appends price with '$' if price exists
 function insertItemPrice(html,
                          pricePropName,
                          priceValue) {
-  // If not specified, replace with empty string
+
   if (!priceValue) {
     return insertProperty(html, pricePropName, "");
   }
@@ -298,11 +255,10 @@ function insertItemPrice(html,
 }
 
 
-// Appends portion name in parens if it exists
 function insertItemPortionName(html,
                                portionPropName,
                                portionValue) {
-  // If not specified, return original string
+
   if (!portionValue) {
     return insertProperty(html, portionPropName, "");
   }
@@ -310,14 +266,13 @@ function insertItemPortionName(html,
   portionValue = "(" + portionValue + ")";
   html = insertProperty(html, portionPropName, portionValue);
   return html;
+
 }
 
-// Assign the dc object to the global scope
 window.$dc = dc;
 
-// Immediately Invoked Function Expression (IIFE)
 (function (global) {
-  // Rest of your code goes here...
+
 })(window);
 
 global.$dc = dc;
