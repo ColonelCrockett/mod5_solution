@@ -108,7 +108,8 @@ $ajaxUtils.sendGetRequest(
     // ...
   },
   false); // False here because we are getting just regular HTML from the server, so no need to process JSON.
-
+}
+  
 var homeHtmlToInsertIntoMainPage = homeHtml.replace(/REPLACE_SHORT_NAME/g, "'" + chosenCategoryShortName + "'");
 
 insertHtml("#main-content", homeHtmlToInsertIntoMainPage);
