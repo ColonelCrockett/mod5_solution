@@ -1,4 +1,3 @@
-
 $(function () {
 
   $("#navbarToggle").blur(function (event) {
@@ -70,25 +69,30 @@ var switchMenuToActive = function () {
 
 document.addEventListener("DOMContentLoaded", function (event) {
 
-showLoading("#main-content");
-$ajaxUtils.sendGetRequest(
-  allCategoriesUrl,
-  buildAndShowHomeHTML,
-  true);
-});
+function buildAndShowHomeHTML(categories) {
+  // Show loading indicator while the AJAX request is in progress
+  showLoading("#main-content");
 
-function buildAndShowHomeHTML (categories) {
+  $ajaxUtils.sendGetRequest(
+    homeHtmlUrl,
+    function (homeHtml) {
+      var chosenCategory = chooseRandomCategory(categories);
+      var chosenCategoryShortName = chosenCategory.short_name;
 
-$ajaxUtils.sendGetRequest(
-  homeHtmlUrl,
-  function (homeHtml) {
-
-    var chosenCategory = chooseRandomCategory(categories);
-    var chosenCategoryShortName = chosenCategory.short_name;
-
-  },
-  false);
+      // Replace placeholder in homeHtml with chosenCategoryShortName
+      var homeHtmlToInsertIntoMainPage = homeHtml.replace(/REPLACE_SHORT_NAME/g, "'" + chosenCategoryShortName + "'");
+      
+      // Insert modified HTML into the main-content element
+      insertHtml("#main-content", homeHtmlToInsertIntoMainPage);
+      
+      // Hide loading indicator after the AJAX request completes
+      hideLoading("#main-content");
+    },
+    false
+  );
 }
+
+
 
 var homeHtmlToInsertIntoMainPage = homeHtml.replace(/REPLACE_SHORT_NAME/g, "'" + chosenCategoryShortName + "'");
 
