@@ -383,5 +383,3 @@ window.$dc = dc;
 })(window);
 
 global.$dc = dc;
-
-})(window);
