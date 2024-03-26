@@ -1,3 +1,7 @@
+window.$dc = dc;
+
+(function (global, dc) {
+
 $(function () {
 
   $("#navbarToggle").blur(function (event) {
@@ -273,10 +277,7 @@ function insertItemPortionName(html,
 
 }
 
-window.$dc = dc;
+})(window, dc);
 
-(function (global) {
-
-})(window);
-
+// At the bottom of your code
 global.$dc = dc;
