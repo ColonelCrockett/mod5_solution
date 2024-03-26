@@ -147,9 +147,12 @@ $ajaxUtils.sendGetRequest(
       // var homeHtmlToInsertIntoMainPage = ....
 
       // STEP 3: Substitute {{randomCategoryShortName}} in the home HTML snippet with the chosen category from Step 2
-    var homeHtmlToInsertIntoMainPage = homeHtml.replace(/REPLACE_SHORT_NAME/g, "'" + chosenCategoryShortName + "'");
+var homeHtmlToInsertIntoMainPage = homeHtml.replace(/REPLACE_SHORT_NAME/g, "'" + chosenCategoryShortName + "'");
 
-  // TODO: STEP 4: Insert the produced HTML in STEP 3 into the main page
+
+
+
+      // TODO: STEP 4: Insert the produced HTML in STEP 3 into the main page
       // Use the existing insertHtml function for that purpose. Look through this code for an example
       // of how to do that.
       // ....
@@ -157,11 +160,8 @@ $ajaxUtils.sendGetRequest(
       // STEP 4: Insert the produced HTML from STEP 3 into the main page
     insertHtml("#main-content", homeHtmlToInsertIntoMainPage);
 
-    },
-    false); // False here because we are getting just regular HTML from the server, so no need to process JSON.
-}
-
-
+    });
+}, false);
 
 // Given array of category objects, returns a random category object.
 function chooseRandomCategory (categories) {
