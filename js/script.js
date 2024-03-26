@@ -13,6 +13,24 @@ $(function () { // Same as document.addEventListener("DOMContentLoaded"...
 
 var dc = {};
 
+// Load the menu categories view
+dc.loadMenuCategories = function () {
+  showLoading("#main-content");
+  $ajaxUtils.sendGetRequest(
+    allCategoriesUrl,
+    buildAndShowCategoriesHTML);
+};
+
+// Load the menu items view
+// 'categoryShort' is a short_name for a category
+dc.loadMenuItems = function (categoryShort) {
+  showLoading("#main-content");
+  $ajaxUtils.sendGetRequest(
+    menuItemsUrl + categoryShort + ".json",
+    buildAndShowMenuItemsHTML);
+};
+
+
 var homeHtmlUrl = "snippets/home-snippet.html";
 var allCategoriesUrl =
   "https://coursera-jhu-default-rtdb.firebaseio.com/categories.json";
@@ -356,6 +374,13 @@ function insertItemPortionName(html,
   return html;
 }
 
+// Assign the dc object to the global scope
+window.$dc = dc;
+
+// Immediately Invoked Function Expression (IIFE)
+(function (global) {
+  // Rest of your code goes here...
+})(window);
 
 global.$dc = dc;
 
